@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<head>
+    <title>mastermind</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/media/styles/style.css">
+    <style>
+        /* #system_sequence {
+            color: black; 
+            background-color: black;
+            transition: all 0.2s;
+        } */
+        #giveup {
+            text-align: center;
+            margin-bottom: 4px;
+        }
+        #giveup p {
+            margin: 0;
+        }
+        #death_message * {
+            display: inline-block;
+        }
+        .center_h {
+            margin: 0 auto;
+            width: fit-content;
+        }
+        .circle {
+            height: 30px;
+            aspect-ratio: 1/1;
+            box-sizing: border-box;
+            border: 2px solid white;
+            border-radius: 100%;
+            /* margin-right: 2px; */
+        }
+        .circle.white { background-color: white; }
+        .circle.black { background-color: black; }
+        .circle.red { background-color: red; }
+        .circle.blue { background-color: blue; }
+        .circle.yellow { background-color: yellow; }
+        .circle.green { background-color: green; }
+
+        .peg {
+            height: 15px;
+            aspect-ratio: 1/1;
+            box-sizing: border-box;
+            border: 2px solid white;
+            border-radius: 100%;
+        }
+        .peg.white { background-color: white; }
+        .peg.black { background-color: black; }
+
+        .attempt_cell { 
+            display: flex; 
+            flex-direction: row; 
+            padding: 5px;
+        }
+        .peg_cell { display: grid; grid-template-columns: 15px 15px; column-gap: 2px; row-gap: 2px; margin-right: 2px;}
+        .circle_cell { display: grid; grid-template-columns: 30px 30px 30px 30px; column-gap: 2px; row-gap: 2px; }
+
+        #system_sequence:hover {
+            background-color: inherit;
+        }
+
+        select *:hover {
+            background-color: pink;
+        }
+    </style>
+</head>
+<body>
+    <div id="wrapper">
+        <div id="header">
+            <img src="/media/head.gif">
+            <nav>
+                <ul>
+                    <li><a href="/">home</a></li>
+                    <li><a href="/trinkets" class="active">trinkets</a></li>
+                    <li><a href="/cave">cave</a></li>
+                    <li><a href="/buttons">buttons</a></li>
+                    <li><a href="https://poppy.atabook.org/" target="_blank">guestbook &#129125;</a></li>
+                    <li><a href="https://spacehey.com/poppies" target="_blank">spacehey &#129125;</a></li>
+                    <li><a href="http://blog.scsi.cloud" target="_blank">blog &#129125;</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div id="content">
+            <div id="giveup">
+                <div style="display: inline-block;">
+                    <div id="forfeit">
+                        <button onclick="forfeit()">give up</button>
+                        <button onclick="location.href='help';">instructions</button>
+                    </div>
+                    <div id="death_message" style="display: none;">
+                        <p>answer: </p>
+                        <p id="system_sequence"></p>
+                        <button onclick="reset()">reset</button>
+                    </div>
+                </div>
+
+            </div>
+            <div id="inputs" class="center_h">
+                <select id="sel1">
+                    <option style="background-color: white; color: white;">white</option>
+                    <option style="background-color: black; color: white;">black</option>
+                    <option style="background-color: red; color: red;">red</option>
+                    <option style="background-color: blue; color: white;">blue</option>
+                    <option style="background-color: yellow; color: yellow;">yellow</option>
+                    <option style="background-color: green; color: white;">green</option>
+                </select>
+                <select id="sel2">
+                    <option style="background-color: white; color: white;">white</option>
+                    <option style="background-color: black; color: white;">black</option>
+                    <option style="background-color: red; color: red;">red</option>
+                    <option style="background-color: blue; color: white;">blue</option>
+                    <option style="background-color: yellow; color: yellow;">yellow</option>
+                    <option style="background-color: green; color: white;">green</option>
+                </select>
+                <select id="sel3">
+                    <option style="background-color: white; color: white;">white</option>
+                    <option style="background-color: black; color: white;">black</option>
+                    <option style="background-color: red; color: red;">red</option>
+                    <option style="background-color: blue; color: white;">blue</option>
+                    <option style="background-color: yellow; color: yellow;">yellow</option>
+                    <option style="background-color: green; color: white;">green</option>
+                </select>
+                <select id="sel4">
+                    <option style="background-color: white; color: white;">white</option>
+                    <option style="background-color: black; color: white;">black</option>
+                    <option style="background-color: red; color: red;">red</option>
+                    <option style="background-color: blue; color: white;">blue</option>
+                    <option style="background-color: yellow; color: yellow;">yellow</option>
+                    <option style="background-color: green; color: white;">green</option>
+                </select>
+                <button onclick="compare_player_sequence()">check</button>
+            </div>
+            <div id="attempts" class="center_h">
+                <div style="display: flex; flex-direction: row;">
+                    <div style="display: grid; grid-template-columns: 15px 15px;">
+                        
+                    </div>
+                    <div style="display: flex; flex-direction: row;">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <center>
+            <p>copyright poppy 2025</p>
+            <a href="https://poppy.gg">
+                <img src="/media/button/poppy.gg.gif">
+                <img src="/media/button/gec.gif">
+            </a>
+        </center>
+    </footer>
+</body>
+<script>
+    var system_sequence = generate_system_sequence()
+    document.getElementById('system_sequence').innerText = system_sequence.join(', ')
+
+    function generate_system_sequence() {
+        const colours = ['white', 'black', 'red', 'blue', 'yellow', 'green']
+        const sequence = [colours[Math.floor(Math.random() * colours.length)], colours[Math.floor(Math.random() * colours.length)], colours[Math.floor(Math.random() * colours.length)], colours[Math.floor(Math.random() * colours.length)]];
+        return sequence
+    }
+
+    function compare_player_sequence() {
+        const sequence = get_player_sequence()
+        const backup_sequence = [...sequence]
+        var local_system_sequence = [...system_sequence]
+        var crystals = []
+        for (let i = 0; i < sequence.length; i++) {
+            console.log(i)
+            if (sequence[i] == local_system_sequence[i]) {
+                sequence[i] = false
+                local_system_sequence[i] = false
+                crystals.push('black')
+            }
+        } 
+        for (let i = 0; i < sequence.length; i++) {
+            var index = local_system_sequence.indexOf(sequence[i])
+            if (index > -1 && sequence[i]) {
+                // sequence[i] = false
+                local_system_sequence[index] = false
+                crystals.push('white')
+            }
+        } 
+        console.log(crystals)
+
+        var a_circles = ''
+        backup_sequence.forEach( element => {
+            a_circles += `<div class="circle ${element}"></div>`
+        })
+        var a_crystals = ''
+        crystals.forEach( element => {
+            a_crystals += `<div class="peg ${element}"></div>`
+        })
+        const attempts = document.getElementById('attempts')
+        var div = document.createElement("div")
+        div.innerHTML = `<div class="attempt_cell"><div class="peg_cell">${a_crystals}</div><div class="circle_cell">${a_circles}</div></div>`
+        attempts.prepend(div)
+    }
+
+    function get_player_sequence() {
+        return [document.getElementById('sel1').value, document.getElementById('sel2').value, document.getElementById('sel3').value, document.getElementById('sel4').value]
+    }
+
+    function forfeit() {
+        const death_message = document.getElementById('death_message')
+        const button = document.getElementById('forfeit')
+        death_message.style.display = 'inherit'
+        button.style.display = 'none'
+    }
+
+    function reset() {
+        window.location = window.location
+    }
+</script>

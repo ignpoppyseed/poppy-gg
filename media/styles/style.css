@@ -1,0 +1,117 @@
+:root {
+    --root-color: #8d2fec;
+    --bg-color: #000000;
+}
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color:azure;
+    background-color: #000000;
+    background-image: url('/media/stars.gif');
+    margin: 0;
+}
+html {
+    min-height: 100%;
+    cursor: url('/media/cursor.ico'), auto;
+    overflow-x: hidden;
+}
+a, select, button {
+    cursor: url('/media/cursor_click.ico'), default;
+}
+a, a:visited, a:hover, a:active {
+    color: #8d2fec;
+}
+#wrapper {
+    min-height: 100vh;
+    max-width: 974px;
+    min-width: 850px;
+    margin: auto;
+    background-color: #000000;
+}
+footer {
+    max-width: 974px;
+    min-width: 850px;
+    margin: auto;
+    background-color: #000000;
+}
+footer p{
+    margin: 0 0 5px;
+}
+#header > img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 20px;
+}
+nav {
+    text-align: center;
+    display: inline;
+}
+nav > ul {
+    list-style-type: none;
+    padding: 0;
+    /* background-image: url('/media/stars.gif'); */
+}
+nav li {
+    display: inline-block;
+}
+nav a {
+    padding-left: 3px;
+    padding-right: 3px;
+    color: white !important; 
+    text-decoration: none;
+}
+nav a.active {
+    background-color: #8d2fec;
+}
+.photoblock {
+    margin-bottom: 20px;
+}
+.photoblock p {
+    margin: 0;
+}
+.photoblock img {
+    max-width: 100%;
+    aspect-ratio: 3/2;
+    width: 100%;
+    object-fit: contain;
+}
+#content {
+    margin: 0 20px;
+    padding-bottom: 1px;
+}
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 2px solid #111;
+    padding: 8px;
+}
+
+tr:first-child {
+    background-color: #111;
+}
+
+.laptop_image {
+    width: 200px;
+    aspect-ratio: 3/2;
+    object-fit: cover;
+}
+@media (max-width: 850px) {
+    #wrapper {
+        width: 100%;
+        min-width: unset;
+    }
+    footer {
+        width: 100%;
+        min-width: unset;
+    }
+    #header > img {
+        /* max-width: 200px; */
+        width: 95%;
+        /* margin-left: 20px;
+        margin-right: 20px; */
+    }
+}

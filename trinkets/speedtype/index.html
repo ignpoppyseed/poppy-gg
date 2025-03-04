@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<head>
+    <title>speedtype</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/media/styles/style.css">
+    <style>
+        #game {
+            display: grid;
+            /* grid-template-rows: 0.3fr 1fr; */
+            grid-template-columns: 1fr 1fr;
+            grid-auto-rows: max-content
+        }
+        #game > * { width: 100%; }
+        #input:focus { outline: none; }
+        #timer { font-size: xx-large; margin: 0; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <div id="wrapper">
+        <div id="header">
+            <img src="/media/head.gif">
+            <nav>
+                <ul>
+                    <li><a href="/">home</a></li>
+                    <li><a href="/trinkets" class="active">trinkets</a></li>
+                    <li><a href="/cave">cave</a></li>
+                    <li><a href="/buttons">buttons</a></li>
+                    <li><a href="https://poppy.atabook.org/" target="_blank">guestbook &#129125;</a></li>
+                    <li><a href="https://spacehey.com/poppies" target="_blank">spacehey &#129125;</a></li>
+                    <li><a href="http://blog.scsi.cloud" target="_blank">blog &#129125;</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div id="content">
+            <div id="pregame">
+                <center>
+                    <button onclick="start_game()">start game !!!</button>
+                </center>
+            </div>
+            <div id="postgame" class="hidden">
+                <center>
+                    <p id="final_score"></p>
+                    <button onclick="window.location = window.location">reset</button>
+                </center>
+            </div>
+            <div id="game" class="hidden">
+                <div style="grid-area: 1/1/1/3;">
+                    <center><p id="timer">00:00</p></center>
+                </div>
+                <div style="grid-area: 2/1/2/1;" id="copy"></div>
+                <div id="input" style="grid-area: 2/2/2/2;" contenteditable="true"></div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <center>
+            <p>copyright poppy 2025</p>
+            <a href="https://poppy.gg">
+                <img src="/media/button/poppy.gg.gif">
+                <img src="/media/button/gec.gif">
+            </a>
+        </center>
+    </footer>
+</body>
+<script>
+    const game_length = 5 // game length in seconds
+    const pregame = document.getElementById('pregame'), game = document.getElementById('game'), postgame = document.getElementById('postgame'), copy = document.getElementById('copy'), input = document.getElementById('input'), timer = document.getElementById('timer'), final_score = document.getElementById('final_score')
+    function start_game() {
+        const init_time = Date.now()
+        pregame.classList.add('hidden')
+        copy.innerText = generate_copy()
+        game.classList.remove('hidden')
+        timer.innerText = format_seconds(game_length)
+        var timer_interval = setInterval(function() {
+            var time_left = Math.floor(game_length - ((Date.now() - init_time) / 1000))
+            timer.innerText = format_seconds(time_left)
+            if (time_left < 1) { clearInterval(timer_interval); game_end() }
+        }, 1000);
+    }
+
+    function game_end() {
+        input.contentEditable = 'false'
+        postgame.classList.remove('hidden')
+        final_score.innerText = `final score: ${calculate_score()}`
+    }
+
+    function calculate_score() {
+        return `${Math.floor((input.innerText.length*100)/copy.innerText.length)}%`
+    }
+
+    function generate_copy() {
+        return 'Fusce id fermentum purus. Nunc aliquet fermentum ultricies. Suspendisse nisl sem, fermentum dignissim tincidunt in, congue sed mi. Aenean vitae nulla in urna aliquam rutrum. Sed lacinia velit vitae sodales consectetur. Duis efficitur rhoncus nisi vitae rutrum. Etiam eget orci a metus interdum vehicula. Suspendisse potenti. Maecenas malesuada urna mi, euismod molestie ipsum ullamcorper quis. Nunc ut turpis tortor. Pellentesque eget elit fermentum, finibus massa ac, sagittis massa. Donec facilisis tristique tortor ut posuere. Interdum et malesuada fames ac ante ipsum primis in faucibus. Mauris vel justo vitae eros viverra egestas.'
+    }
+
+    function format_seconds(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const remaining_seconds = seconds % 60;
+
+        const formatted_minutes = String(minutes).padStart(2, '0');
+        const formatted_seconds = String(remaining_seconds).padStart(2, '0');
+
+        return `${formatted_minutes}:${formatted_seconds}`;
+    }
+
+    input.onkeyup = function(e) {
+        console.log(e.key)
+        if (!copy.innerText.startsWith(input.innerText) && e.key != ' ') { input.innerText = ''; alert('FUCK') }
+    }
+</script>

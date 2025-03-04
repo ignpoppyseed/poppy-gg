@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<head>
+    <title>t9</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/media/styles/style.css">
+    <style>
+        #t9 {
+            width: fit-content;
+            /* border: 1px solid white; */
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+            margin: 0 auto;
+            touch-action: manipulation;
+        }
+        #t9 button {
+            aspect-ratio: 1/1;
+            /* width: 50px; */
+        }
+        #t9 button .main {
+            font-size: x-large;
+            margin: 0;
+        }
+        #t9 button .sub {
+            margin: 0;
+            /* margin-top: -1em; */
+            font-size: smaller;
+            text-wrap: nowrap;
+        }
+        #t9 button .sub::after {
+            content: "";
+            display: inline-block;
+            width: 0px;
+        }
+        #t9 textarea { resize: none; }
+        @media (max-width: 850px) {
+            #t9 button {
+                width: unset;
+            }
+            #t9 {
+                width: unset;
+                max-width: calc(100% - 100px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="wrapper">
+        <div id="header">
+            <img src="/media/head.gif">
+            <nav>
+                <ul>
+                    <li><a href="/">home</a></li>
+                    <li><a href="/trinkets" class="active">trinkets</a></li>
+                    <li><a href="/cave">cave</a></li>
+                    <li><a href="/buttons">buttons</a></li>
+                    <li><a href="https://poppy.atabook.org/" target="_blank">guestbook &#129125;</a></li>
+                    <li><a href="https://spacehey.com/poppies" target="_blank">spacehey &#129125;</a></li>
+                    <li><a href="http://blog.scsi.cloud" target="_blank">blog &#129125;</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div id="content">
+            <!-- <input onkeydown="return false;"> -->
+            <div id="t9">
+                <textarea readonly id="t9_output" style="grid-area: 1 / 1 / 1 / 4"></textarea>
+
+                <button style="grid-area: 2 / 1 / 2 / 1" onclick="t9_keypress('1')" id="1">
+                        <p class="main">1</p>
+                        <p class="sub"> </p>
+                </button>
+                <button style="grid-area: 2 / 2 / 2 / 2" onclick="t9_keypress('2')" id="2">
+                        <p class="main">2</p>
+                        <p class="sub">A B C</p>
+                </button>
+                <button style="grid-area: 2 / 3 / 2 / 3" onclick="t9_keypress('3')" id="3">
+                        <p class="main">3</p>
+                        <p class="sub">D E F</p>
+                </button>
+                
+                <button style="grid-area: 3 / 1 / 3 / 1" onclick="t9_keypress('4')" id="4">
+                        <p class="main">4</p>
+                        <p class="sub">G H I</p>
+                </button>
+                <button style="grid-area: 3 / 2 / 3 / 2" onclick="t9_keypress('5')" id="5">
+                        <p class="main">5</p>
+                        <p class="sub">J K L</p>
+                </button>
+                <button style="grid-area: 3 / 3 / 3 / 3" onclick="t9_keypress('6')" id="6">
+                        <p class="main">6</p>
+                        <p class="sub">M N O</p>
+                </button>
+                
+                <button style="grid-area: 4 / 1 / 4 / 1" onclick="t9_keypress('7')" id="7">
+                        <p class="main">7</p>
+                        <p class="sub">P Q R S</p>
+                </button>
+                <button style="grid-area: 4 / 2 / 4 / 2" onclick="t9_keypress('8')" id="8">
+                        <p class="main">8</p>
+                        <p class="sub">T U V</p>
+                </button>
+                <button style="grid-area: 4 / 3 / 4 / 3" onclick="t9_keypress('9')" id="9">
+                        <p class="main">9</p>
+                        <p class="sub">W X Y Z</p>
+                </button>
+                
+                <button style="grid-area: 5 / 2 / 5 / 2" onclick="t9_keypress('0')" id="0">
+                        <p class="main">0</p>
+                        <p class="sub">_</p>
+                </button>
+                <button style="grid-area: 5 / 3 / 5 / 3" onclick="backspace()">
+                        <p class="main"><</p>
+                        <p class="sub"></p>
+                </button>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <center>
+            <p>copyright poppy 2025</p>
+            <a href="https://poppy.gg">
+                <img src="/media/button/poppy.gg.gif">
+                <img src="/media/button/gec.gif">
+            </a>
+        </center>
+    </footer>
+</body>
+<script>
+    const timeout_ms = 1000
+    const keys = {'0': [' ', '0'], '1': ['1'], '2': ['a', 'b', 'c', '2'], '3': ['d', 'e', 'f', '3'], '4': ['g', 'h', 'i', '4'], '5': ['j', 'k', 'l', '5'], '6': ['m', 'n', 'o', '6'], '7': ['p', 'q', 'r', 's'], '8': ['t', 'u', 'v', '8'], '9': ['w', 'x', 'y', 'z', '9']}
+    const t9_output = document.getElementById('t9_output')
+    var current_key = ''
+    var keystep = 0
+    var last_keypress_time = 0
+    function t9_keypress(key) {
+        if ((Date.now() - last_keypress_time) > timeout_ms) { current_key = '' }
+        if (current_key == key) {
+            if ( (keystep+1)>keys[key].length ) { keystep = 0 } 
+            t9_output.value = t9_output.value.slice(0, -1) + keys[key][keystep]
+            keystep++ 
+        } else if (current_key != key) {
+            keystep = 0, current_key = key
+            t9_output.value += keys[key][keystep]
+            keystep++
+        }
+        last_keypress_time = Date.now()
+    }
+    function backspace() {
+        t9_output.value = t9_output.value.slice(0, -1)
+    }
+    function clear() {
+        t9_output.value = ''
+    }
+</script>

@@ -13,6 +13,7 @@
         #game > * { width: 100%; }
         #input:focus { outline: none; }
         #timer { font-size: xx-large; margin: 0; }
+        #final_score { font-size: xx-large; margin: 0; }
         .hidden { display: none !important; }
     </style>
 </head>
@@ -35,6 +36,8 @@
         <div id="content">
             <div id="pregame">
                 <center>
+                    <label for="user_game_length">game length in seconds: </label>
+                    <input type="number" value="60" id="user_game_length"><br>
                     <button onclick="start_game()">start game !!!</button>
                 </center>
             </div>
@@ -63,10 +66,13 @@
         </center>
     </footer>
 </body>
+<script src="/media/scripts/words.js"></script>
 <script>
-    const game_length = 5 // game length in seconds
+    const game_length_input = document.getElementById('user_game_length')
+    // const default_game_length = 300 // game length in seconds
     const pregame = document.getElementById('pregame'), game = document.getElementById('game'), postgame = document.getElementById('postgame'), copy = document.getElementById('copy'), input = document.getElementById('input'), timer = document.getElementById('timer'), final_score = document.getElementById('final_score')
     function start_game() {
+        const game_length = parseInt(game_length_input.value)
         const init_time = Date.now()
         pregame.classList.add('hidden')
         copy.innerText = generate_copy()
@@ -82,6 +88,7 @@
     function game_end() {
         input.contentEditable = 'false'
         postgame.classList.remove('hidden')
+        timer.classList.add('hidden')
         final_score.innerText = `final score: ${calculate_score()}`
     }
 
@@ -90,7 +97,17 @@
     }
 
     function generate_copy() {
-        return 'Fusce id fermentum purus. Nunc aliquet fermentum ultricies. Suspendisse nisl sem, fermentum dignissim tincidunt in, congue sed mi. Aenean vitae nulla in urna aliquam rutrum. Sed lacinia velit vitae sodales consectetur. Duis efficitur rhoncus nisi vitae rutrum. Etiam eget orci a metus interdum vehicula. Suspendisse potenti. Maecenas malesuada urna mi, euismod molestie ipsum ullamcorper quis. Nunc ut turpis tortor. Pellentesque eget elit fermentum, finibus massa ac, sagittis massa. Donec facilisis tristique tortor ut posuere. Interdum et malesuada fames ac ante ipsum primis in faucibus. Mauris vel justo vitae eros viverra egestas.'
+        var counter = 0
+        var text_list = []
+        while (counter < 100+1) {
+            if (Math.floor(Math.random() * 10) == 1) {
+                text_list.push(ext_word_list[Math.floor(Math.random() * ext_word_list.length)]+['?', '.', '!'][Math.floor(Math.random() * 3)])
+            } else {
+                text_list.push(ext_word_list[Math.floor(Math.random() * ext_word_list.length)])
+            }
+            counter++
+        }
+        return text_list.join(' ')+['?', '.', '!'][Math.floor(Math.random() * 3)]
     }
 
     function format_seconds(seconds) {
@@ -105,6 +122,6 @@
 
     input.onkeyup = function(e) {
         console.log(e.key)
-        if (!copy.innerText.startsWith(input.innerText) && e.key != ' ') { input.innerText = ''; alert('FUCK') }
+        if (!copy.innerText.startsWith(input.innerText) && e.key != ' ') { input.innerText = '' }
     }
 </script>

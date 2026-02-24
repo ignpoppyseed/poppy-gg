@@ -36,6 +36,9 @@ footer {
 footer p{
     margin: 0 0 5px;
 }
+footer a{
+    text-decoration: none;
+}
 #header > img {
     display: block;
     margin-left: auto;

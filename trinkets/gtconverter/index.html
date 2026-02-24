@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<head>
+    <title>speedtype</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/media/styles/style.css">
+    <style>
+    </style>
+</head>
+<body>
+    <div id="wrapper">
+        <div id="header">
+            <img src="/media/head.gif">
+            <nav>
+                <ul>
+                    <li><a href="/">home</a></li>
+                    <li><a href="/trinkets" class="active">trinkets</a></li>
+                    <li><a href="/cave">cave</a></li>
+                    <li><a href="/buttons">buttons</a></li>
+                    <li><a href="https://poppy.atabook.org/" target="_blank">guestbook &#129125;</a></li>
+                    <li><a href="https://spacehey.com/poppies" target="_blank">spacehey &#129125;</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div id="content">
+            <label for="tank_size">tank size (gallons)</label> <input id="tank_size" type="number"> <label for="dist_to_empty">distance to empty (miles)</label> <input id="dist_to_empty" type="number"> <button onclick="calculate_mpg()">calculate mpg</button> <p id="mpg_result">0</p>
+            <label for="mpg">mpg</label> <input id="mpg" type="number"> <button onclick="calculate_lp100km()">calculate litres / 100km</button> <p id="lp100km_result">0</p>
+
+
+        </div>
+    </div>
+    <footer>
+        <center>
+            <p>copyright poppy 2025</p>
+            <a href="https://poppy.gg">
+                <img src="/media/button/poppy.gg.gif">
+                <img src="/media/button/gec.gif">
+            </a>
+        </center>
+    </footer>
+</body>
+<script>
+    function calculate_lp100km() {
+        const mpg = document.getElementById('mpg').value
+        document.getElementById('lp100km_result').innerText = round_to_decimal(((100*0.621371)/mpg)*3.785412, 2)
+    }
+    function calculate_mpg() {
+        const tank_size = document.getElementById('tank_size').value
+        const dist_to_empty = document.getElementById('dist_to_empty').value
+        document.getElementById('mpg_result').innerText = round_to_decimal(dist_to_empty/tank_size, 2)
+    }
+    function round_to_decimal(number, decimals) {
+        const factor = Math.pow(10, decimals);
+        return Math.round(number * factor) / factor;
+    }
+
+</script>
